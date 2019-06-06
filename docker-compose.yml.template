@@ -1,0 +1,214 @@
+version: '3.1'
+
+#
+# Grouper Build
+#
+
+services:
+
+    openldap:
+        stop_grace_period: 60s
+        image: my/openldap
+        hostname: openldap
+        networks:
+          - grouper_i2network
+        ports:
+          - "389:389"
+        volumes:
+          - grouper_ldap:/var/lib/ldap
+          - grouper_ldap_etc:/var/lib/ldap_etc
+        environment:
+          - SECRET_SERVICE_NAME=grouper
+        secrets:
+          - grouper-openldap-ldap.crt
+          - grouper-openldap-ldap.key
+          - grouper-openldap-config_ldap.sh
+        env_file:
+          - environment/common.env
+
+    mariadb:
+        stop_grace_period: 60s
+        image: my/mariadb
+        hostname: mariadb
+        networks:
+          - grouper_i2network
+        ports:
+          - "3306:3306"
+        volumes:
+          - grouper_mysql:/var/lib/mysqlmounted
+        env_file:
+          - ./environment/db.env
+
+    grouper-ui:
+        stop_grace_period: 45s
+        image: my/grouper-ui
+        hostname: grouper-ui
+        command: ui
+        networks:
+            - grouper_i2network
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - mariadb
+            - openldap
+        secrets:
+            - grouper_grouper.hibernate.properties
+            - grouper_subject.properties
+            - grouper_grouper.properties
+            - grouper_grouper.client.properties
+            - grouper_grouper-loader.properties
+            - grouper_log4j.properties
+            - grouper_grouper-ui.properties
+            - grouper_grouper.text.en.us.properties
+            - shib_shibboleth2.xml
+            - shib_attribute-map.xml
+            - shib_idp-metadata.xml
+            - host-key.pem
+            - host-cert.pem
+            - shib_sp-cert.pem
+            - shib_sp-key.pem
+            # - httpd_grouper-www.conf
+            ${GROUPER_AUTHENTICATION_STRING}
+        env_file:
+          - ./environment/grouper.env
+
+    # deamon depends on UI only because its where we init the database for now
+    grouper-daemon:
+        stop_grace_period: 45s
+        image: my/grouper-shared
+        hostname: grouper-daemon
+        depends_on:
+            - mariadb
+            - openldap
+            - grouper-ui
+        command: bash -c "while ! curl -s mariadb:3306 > /dev/null; do echo waiting for mysql to start; sleep 3; done; while ! curl -s ldap://openldap:389 > /dev/null; do echo waiting for ldap to start; sleep 3; done; while ! curl -s -k https://grouper-ui:443/grouper/ > /dev/null; do echo waiting for grouper-ui to start; sleep 3; done; exec daemon"
+        env_file:
+             - ./environment/grouper.env
+        networks:
+             - grouper_i2network
+        secrets:
+#             - database_password.txt
+#             - rabbitmq_password.txt
+             - grouper_grouper.hibernate.properties
+             - grouper_subject.properties
+             - grouper_grouper.properties
+             - grouper_grouper.client.properties
+             - grouper_grouper-loader.properties
+             - grouper_log4j.properties
+             # - grouper_ldap.properties
+
+
+#    grouper-gsh:
+#        image: my/grouper-gsh
+#        hostname: grouper-gsh
+#        command: bash -c "sleep 315; exec gsh"
+#        networks:
+#            - grouper_i2network
+#        depends_on:
+#            - mariadb
+#            - openldap
+#        secrets:
+#            - grouper_grouper.hibernate.properties
+#            - grouper_subject.properties
+#            - grouper_grouper.properties
+#            - grouper_grouper-ui.properties
+#            - grouper_ldap-password-file
+#        env_file:
+#          - ./environment/grouper.env
+
+
+
+    grouper-ws:
+        stop_grace_period: 45s
+        image: my/grouper-shared
+        hostname: grouper-ws
+        depends_on:
+            - mariadb
+            - openldap
+            - grouper-ui
+        #command: ws
+        command: bash -c "while ! curl -s mariadb:3306 > /dev/null; do echo waiting for mysql to start; sleep 3; done; while ! curl -s ldap://openldap:389 > /dev/null; do echo waiting for ldap to start; sleep 3; done; while ! curl -s -k https://grouper-ui:443/grouper/ > /dev/null; do echo waiting for grouper-ui to start; sleep 3; done; exec ws"
+        env_file:
+             - ./environment/grouper.env
+        networks:
+            - grouper_i2network
+        ports:
+            - "8080:80"
+            - "8443:443"
+        secrets:
+             - grouper_grouper.hibernate.properties
+             - grouper_subject.properties
+             - grouper_grouper.properties
+             - grouper_grouper.client.properties
+             - grouper_grouper-loader.properties
+             - grouper_log4j.properties
+
+networks:
+    grouper_i2network:
+        driver: overlay
+        #opt: encrypted
+
+volumes:
+    grouper_mysql:
+        driver: local
+    grouper_ldap:
+        driver: local
+    grouper_ldap_etc:
+        driver: local
+
+secrets:
+    grouper-openldap-ldap.crt:
+        #external: true
+        file: ./secrets/openldap/ldap.crt
+    grouper-openldap-ldap.key:
+        #external: true
+        file: ./secrets/openldap/ldap.key
+    grouper-openldap-config_ldap.sh:
+        #external: true
+        file: ./secrets/openldap/config_ldap.sh
+    host-key.pem:
+        #external: true
+        file: ./secrets/certs/server_ssl.key
+    host-cert.pem:
+        #external: true
+        file: ./secrets/certs/server_ssl.crt
+    grouper_grouper.hibernate.properties:
+        #external: true
+        file: ./secrets/grouper/grouper.hibernate.properties
+    grouper_subject.properties:
+        #external: true
+        file: ./secrets/grouper/subject.properties
+    grouper_grouper.properties:
+        #external: true
+        file: ./secrets/grouper/grouper.properties
+    grouper_grouper-ui.properties:
+        #external: true
+        file: ./secrets/grouper/grouper-ui.properties
+    grouper_grouper-loader.properties:
+        #external: true
+        file: ./secrets/grouper/grouper-loader.properties
+    grouper_grouper.client.properties:
+        #external: true
+        file: ./secrets/grouper/grouper.client.properties
+    grouper_grouper.text.en.us.properties:
+        #external: true
+        file: ./secrets/grouper/grouper.text.en.us.properties
+    grouper_log4j.properties:
+        #external: true
+        file: ./secrets/grouper/log4j.properties
+    shib_shibboleth2.xml:
+        #external: true
+        file: ./secrets/shib/shibboleth2.xml
+    shib_attribute-map.xml:
+        #external: true
+        file: ./secrets/shib/attribute-map.xml
+    shib_idp-metadata.xml:
+        #external: true
+        file: ./secrets/shib/idp-metadata.xml
+    shib_sp-cert.pem:
+        file: ./secrets/certs/shib_sp-cert.pem
+    shib_sp-key.pem:
+        file: ./secrets/certs/shib_sp-key.pem
+    httpd_grouper-www.conf:
+        file: ./grouper_ui/grouper-www.conf

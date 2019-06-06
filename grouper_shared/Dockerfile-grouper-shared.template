@@ -1,0 +1,4 @@
+FROM tier/grouper:${ITAP_GROUPER_VERSION}
+RUN yum -y update
+LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>"
+

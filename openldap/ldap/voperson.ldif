@@ -1,0 +1,52 @@
+# voPerson
+# see: voperson.org for status.  We only use voPersonSoRID now - 20171003
+#
+dn: cn=voperson,cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: voperson
+#
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.1
+    NAME 'voPersonApplicationUID'
+    DESC 'voPerson Application-Specific User Identifier'
+    EQUALITY caseIgnoreMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15' )
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.2
+    NAME 'voPersonAuthorName'
+    DESC 'voPerson Author Name'
+    EQUALITY caseIgnoreMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15' )
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.3
+    NAME 'voPersonCertificateDN'
+    DESC 'voPerson Certificate Distinguished Name'
+    EQUALITY distinguishedNameMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.12' )
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.4
+    NAME 'voPersonCertificateIssuerDN'
+    DESC 'voPerson Certificate Issuer DN'
+    EQUALITY distinguishedNameMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.12' )
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.5
+    NAME 'voPersonExternalID' 
+    DESC 'SoPerson Scoped External Identifier'
+    EQUALITY caseIgnoreMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15' )
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.6
+    NAME 'voPersonID'
+    DESC 'voPerson Unique Identifier'
+    EQUALITY caseIgnoreMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15' )
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.7
+    NAME 'voPersonSoRID'
+    DESC 'voPerson External Identifier'
+    EQUALITY caseIgnoreMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15' )
+olcAttributeTypes: ( 1.3.6.1.4.1.34998.3.3.8
+    NAME 'voPersonStatus'
+    DESC 'voPerson Status'
+    EQUALITY caseIgnoreMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15' )
+#
+olcObjectClasses: ( 1.3.6.1.4.1.34998.3.3 NAME 'voPerson' AUXILIARY MAY ( voPersonApplicationUID $
+    voPersonAuthorName $ voPersonCertificateDN $ voPersonCertificateIssuerDN $
+    voPersonExternalID $ voPersonID $ voPersonSoRID $ voPersonStatus ) )
+

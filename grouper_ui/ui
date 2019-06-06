@@ -1,0 +1,33 @@
+#!/bin/bash
+
+
+#
+# copy in the text customization
+#
+
+if [ /run/secrets/grouper_grouper.text.en.us.properties ]; then
+    ln -s -b -f /run/secrets/grouper_grouper.text.en.us.properties /opt/grouper/grouper.ui/WEB-INF/classes/grouperText/grouper.text.en.us.properties
+fi
+
+#
+# Wait for mysql to be up and running
+#
+
+while ! curl -s mariadb:3306 > /dev/null; do 
+    echo "grouper-ui: waiting for mysql to start"
+    sleep 3
+done
+
+sleep 10   # complete startup
+
+echo "grouper-ui: Mysql is up and ready for work"
+
+gsh -registry -check -runscript -noprompt > /tmp/db_prep 2>&1
+
+. /usr/local/bin/library.sh
+
+prepUI
+
+export LD_LIBRARY_PATH=/opt/shibboleth/lib64:$LD_LIBRARY_PATH
+
+exec /usr/bin/supervisord -c /opt/tier-support/supervisord-tomcat.conf

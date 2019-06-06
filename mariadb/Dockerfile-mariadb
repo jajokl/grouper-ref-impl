@@ -1,0 +1,5 @@
+FROM tier/mariadb
+RUN yum -y update
+COPY start.sh /opt/bin
+
+
