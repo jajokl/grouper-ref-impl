@@ -56,14 +56,14 @@ fi
 #
 
 if [ -f ${CAMPUS_SUPPLIED_FILES}/favicon.ico ]; then
-    ln  ${CAMPUS_SUPPLIED_FILES}/favicon.ico campus_files/favicon.ico
+    ln -f ${CAMPUS_SUPPLIED_FILES}/favicon.ico campus_files/favicon.ico
     FILE_FAVICON_ICO="COPY campus_files/favicon.ico /opt/grouper/grouper.ui/grouperExternal/public/assets/images/"
 else
     FILE_FAVICON_ICO='# favicon.ico'
 fi
 
 if [ -f ${CAMPUS_SUPPLIED_FILES}/server_ssl.crt ]; then
-    ln  ${CAMPUS_SUPPLIED_FILES}/server_ssl.crt campus_files/host-cert.pem
+    ln -f ${CAMPUS_SUPPLIED_FILES}/server_ssl.crt campus_files/host-cert.pem
     FILE_HOST_CERT_PEM="COPY campus_files/host-cert.pem /etc/pki/tls/certs/"
     cp ${CAMPUS_SUPPLIED_FILES}/server_ssl.key ../secrets/certs
     cp ${CAMPUS_SUPPLIED_FILES}/server_ssl.crt ../secrets/certs
@@ -72,14 +72,14 @@ else
 fi
 
 if [ -f ${CAMPUS_SUPPLIED_FILES}/cachain.pem ]; then
-    ln  ${CAMPUS_SUPPLIED_FILES}/cachain.pem campus_files/cachain.pem
+    ln -f ${CAMPUS_SUPPLIED_FILES}/cachain.pem campus_files/cachain.pem
     FILE_CACHAIN_PEM="COPY campus_files/cachain.pem /etc/pki/tls/certs/"
 else
     FILE_CACHAIN_PEM='# cachain.pem'
 fi
 
 if [ -f ${CAMPUS_SUPPLIED_FILES}/school_logo.png ]; then
-    ln  ${CAMPUS_SUPPLIED_FILES}/school_logo.png campus_files/school_logo.png
+    ln -f ${CAMPUS_SUPPLIED_FILES}/school_logo.png campus_files/school_logo.png
     FILE_SCHOOL_LOGO_PNG="COPY campus_files/school_logo.png /opt/grouper/grouper.ui/grouperExternal/public/assets/images/"
 else
     FILE_SCHOOL_LOGO_PNG='# school_logo.png'

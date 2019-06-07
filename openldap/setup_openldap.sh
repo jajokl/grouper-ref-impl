@@ -125,7 +125,7 @@ for variable in ${VARIABLE_NAMES}; do
 		break
 	done
 	eval ${VNAME}="$response"
-	echo ""
+	#echo ""
 done
 echo ""
 echo "You have entered the following values for openldap configuration:"
