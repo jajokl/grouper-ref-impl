@@ -59,3 +59,13 @@ don't want to deal with browser exceptions
 	sure they are gone).  __If you have other docker volumes that you need to preserve for other applications,__ explicitly delete the volumes named `grouperRI_grouper_ldap`,
     `grouperRI_grouper_ldap_etc`, and `grouperRI_grouper_mysql` instead.
 	`docker volume prune` will **delete all docker volumes on your machine**.
+
+### Shibboleth UI Authentication and Other Customization
+1. You can replace the ITAP logo with your school's logo by replacing the file  `HOME/campus_data/school_logo.png` before you build.
+2. Shibboleth SP authentication for the Grouper UI
+    * Recommendation:  bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before moving on to the next steps.
+    * Place the web server and chain certificates and keys into `HOME/campus_data` using the filenames: `cachain.pem,` `server_ssl.crt,` and `server_ssl.key.`
+    * Place your Shibboleth certificate and key into `HOME/campus_data` using the following filenames: `shib_sp-cert.pem,` and `shib_sp-key.pem.`
+    * You may also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
+3. Note that the provided `docker-compose.yml` file mounts secrets on invocation from the secret's tree.  A production Swarm-based Grouper 
+	environment will most likely create the secrets via a separate, more protected, process.  The needed secret statements are commented out in the provided `docker-compose.yml` file.

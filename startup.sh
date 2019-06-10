@@ -1,6 +1,6 @@
 #!/bin/bash
 
-swarm_mode=`docker info | egrep "^Swarm" | awk '{ print $2 }'`
+swarm_mode=`docker info | egrep "^\s*Swarm:" | awk '{ print $2 }'`
 
 if [ ${swarm_mode} != "active" ]; then
     echo ""
