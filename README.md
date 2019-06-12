@@ -1,3 +1,29 @@
+### Introduction
+
+This [Grouper](https://www.internet2.edu/grouper/) ITAP Reference
+Implementation implements the use case of running Grouper to manage a LDAP
+directory leveraging an existing campus LDAP directory or Active Directory as
+the source of campus People (Subjects).  The provided LDAP directory is
+initially empty and is automatically populated with users and groups via
+interaction with the Grouper User Interface and through Grouper's Loader and
+Web Services.  The contents of the provided LDAP directory can be examined
+using your favorite LDAP search tools.
+
+The Reference Implementation operates in a Docker Swarm environment and
+provides containers for OpenLDAP, a MARIADB database for Grouper, and
+individual containers for several Grouper roles (UI, loader, web services,
+etc.).  The Reference Implementation supports authentication to the Grouper UI
+both using simple passwords (ideal for testing on your laptop) and via a
+Shibboleth SP (perfect for use by multiple people on a server).  The build's
+scripting is designed to work on Linux and MacOS.
+
+This reference is not meant to be deployed into production.  In particular, a
+real database with backups and all of the normal infrastructure is needed.
+This implementation is useful as a working template for designing your
+production implementation as well as early learning and working with Grouper
+itself.
+
+### Installation
 1. Ensure that your docker environment has Docker Swarm enabled.
 	  * `docker swarm init | tee swarm_init.txt`
 	  * `chmod 400 swarm_init.txt`
