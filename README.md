@@ -95,3 +95,10 @@ don't want to deal with browser exceptions
     * You may also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
 3. Note that the provided `docker-compose.yml` file mounts secrets on invocation from the secret's tree.  A production Swarm-based Grouper 
 	environment will most likely create the secrets via a separate, more protected, process.  The needed secret statements are commented out in the provided `docker-compose.yml` file.
+
+### Known Issues
+1. The only users provisioned into LDAP group objects are those who were members of the group at the time the group is first added to LDAP.
+2. When subsequent users are added to the group, their person records are provisioned into LDAP with the appropriate group membership.  However,
+  the group record itself is never updated.
+3. Lots of cleanup work remains for `grouper-loader.properties` and `ldap.properties` once a correct configuration is established.
+4. Still need to modify the configuration container so that it also assists with Shibboleth debug of the server version of the reference implementation.
