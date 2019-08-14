@@ -97,8 +97,5 @@ don't want to deal with browser exceptions
 	environment will most likely create the secrets via a separate, more protected, process.  The needed secret statements are commented out in the provided `docker-compose.yml` file.
 
 ### Known Issues
-1. The only users provisioned into LDAP group objects are those who were members of the group at the time the group is first added to LDAP.
-2. When subsequent users are added to the group, their person records are provisioned into LDAP with the appropriate group membership.  However,
-  the group record itself is never updated.
-3. Lots of cleanup work remains for `grouper-loader.properties` and `ldap.properties` once a correct configuration is established.
-4. Still need to modify the configuration container so that it also assists with Shibboleth debug of the server version of the reference implementation.
+1. Lots of cleanup work remains for configuration properties files once a final configuration is established.
+2. Still need to modify the configuration container so that it also assists with Shibboleth debug of the server version of the reference implementation.
