@@ -1,6 +1,6 @@
 ### Introduction
 
-This [Grouper](https://www.internet2.edu/grouper/) ITAP Reference
+This [Grouper](https://www.internet2.edu/grouper/) TAP Reference
 Implementation implements the use case of running Grouper to manage a LDAP
 directory leveraging an existing campus LDAP directory or Active Directory as
 the source of campus People (Subjects).  The provided LDAP directory is
@@ -47,6 +47,8 @@ that you preserve what is needed on your machine.
 
 3. If you are using the tarball distribution, extract it into an empty directory and then cd into grouper.  We call this directory _HOME_.
 If you are reading this on your machine, you already have a distribution in place.
+To instead obtain a copy from github, `git clone https://github.com/jajokl/grouper-ref-impl` and `cd into grouper-ref-impl`.  This will
+now be the _HOME_ directory.
 
 4. `cd grouper_cfg`
 	  * `./build.sh`
@@ -71,7 +73,7 @@ The startup process takes approximately a minute on a fast laptop with flash
 don't want to deal with browser exceptions
 
 11. login with the admin credentials you entered into the webform
-	  * The `provision_to` attribute values configured in the loader are `psp_User` and `psp_groupOfNames`
+	  * The `etc:pspng:provision_to` attribute values configured in the loader are: `psp_groupOfNames`, `pspng_entitlements`, `pspng_membership`
 	  * `ldapsearch -x -h localhost -b ou=People,dc=myschool,dc=edu '(uid=*)'`
 	  * `ldapsearch -x -h localhost -b ou=Groups,dc=myschool,dc=edu '(cn=*groupname*)'`
 
@@ -87,7 +89,7 @@ don't want to deal with browser exceptions
 	`docker volume prune` will **delete all docker volumes on your machine**.
 
 ### Shibboleth UI Authentication and Other Customization
-1. You can replace the ITAP logo with your school's logo by replacing the file  `HOME/campus_data/school_logo.png` before you build.
+1. You can replace the TAP logo with your school's logo by replacing the file  `HOME/campus_data/school_logo.png` before you build.
 2. Shibboleth SP authentication for the Grouper UI
     * Recommendation:  bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before moving on to the next steps.
     * Place the web server and chain certificates and keys into `HOME/campus_data` using the filenames: `cachain.pem,` `server_ssl.crt,` and `server_ssl.key.`
