@@ -44,23 +44,17 @@ now be the _HOME_ directory.
 	  * `./build.sh`
 	  * `./start-cfg.sh`
 	  * browse to: http://localhost/ (or the URL of your docker host) and fill in the web form
-	  | | |
-      | --- | --- |
-      | * Select local password authentication or Shibboleth depending on your needs. | ![Configuration](webcfg_small.png) |
-	  | * Press the Submit button and download the file (grouper_config.dat) |
-	  | * Place this config file into HOME |
-      | end | end |
+        * Select local password authentication or Shibboleth depending on your needs. 
+	    * Press the Submit button and download the file (grouper_config.dat)
+	    * Place this config file into HOME
 	  * `./stop-cfg`
 
 4. `cd HOME`
 5. Optional: `cd campus_data`.
-
 If you enabled Shibboleth-based Grouper authentication in the web configuration tool, you __must__ copy the needed certificates and keys
  into this directory.  The needed files are: `cachain.pem`, `server_ssl.crt`, `server_ssl.key`, `shib_sp-cert.pem`, and `shib_sp-key.pem`.
-  You __may__ also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
-
+ You __may__ also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
 It is sometumes helpful to bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before doing the above steps.
-
 _Optionally_, you can replace the InCommon `school_logo.png` and `favicon.ico` files with appropriate campus images.
 6. `./setup_grouper.sh`
 7. `./build.sh`
@@ -112,3 +106,5 @@ that you preserve what is needed on your machine.
 2. The configuration web container should be modified so that it can also assist with Shibboleth debugging of the server version of the reference implementation.
 3. The provided `docker-compose.yml` file mounts secrets on invocation from the secret's tree.  A production Swarm-based Grouper 
 	environment will most likely create the secrets via a separate, more protected, process.  The needed secret statements are commented out in the provided `docker-compose.yml` file.
+4. View of Web Configuration Page of Step 3
+![view of webconfig page](webcfg.png)
