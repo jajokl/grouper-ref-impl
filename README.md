@@ -43,11 +43,13 @@ now be the _HOME_ directory.
 3. `cd grouper_cfg`
 	  * `./build.sh`
 	  * `./start-cfg.sh`
-	  * ![Configuration](webcfg_small.png)
 	  * browse to: http://localhost/ (or the URL of your docker host) and fill in the web form
-	    * Select local password authentication; shibboleth works but I have a bit more documentation to complete on where to place certificates, etc.
-	    * Press the Submit button and download the file (grouper_config.dat)
-	    * Place this config file into HOME
+	  | | |
+      | --- | --- |
+      | * Select local password authentication or Shibboleth depending on your needs. | ![Configuration](webcfg_small.png) |
+	  | * Press the Submit button and download the file (grouper_config.dat) |
+	  | * Place this config file into HOME |
+      | end | end |
 	  * `./stop-cfg`
 
 4. `cd HOME`
