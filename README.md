@@ -43,6 +43,7 @@ now be the _HOME_ directory.
 3. `cd grouper_cfg`
 	  * `./build.sh`
 	  * `./start-cfg.sh`
+	  * ![Configuration](webcfg_small.png)
 	  * browse to: http://localhost/ (or the URL of your docker host) and fill in the web form
 	    * Select local password authentication; shibboleth works but I have a bit more documentation to complete on where to place certificates, etc.
 	    * Press the Submit button and download the file (grouper_config.dat)
@@ -51,11 +52,14 @@ now be the _HOME_ directory.
 
 4. `cd HOME`
 5. Optional: `cd campus_data`.
+
 If you enabled Shibboleth-based Grouper authentication in the web configuration tool, you __must__ copy the needed certificates and keys
  into this directory.  The needed files are: `cachain.pem`, `server_ssl.crt`, `server_ssl.key`, `shib_sp-cert.pem`, and `shib_sp-key.pem`.
- You may also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
- It is sometumes helpful to bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before doing the above steps.
-Optionally_, you can replace the InCommon `school_logo.png` and `favicon.ico` files with appropriate campus images.
+  You __may__ also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
+
+It is sometumes helpful to bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before doing the above steps.
+
+_Optionally_, you can replace the InCommon `school_logo.png` and `favicon.ico` files with appropriate campus images.
 6. `./setup_grouper.sh`
 7. `./build.sh`
 8. `./startup.sh`
@@ -68,10 +72,12 @@ The startup process takes approximately a minute on a fast laptop with flash
 10. browse to: https://localhost/grouper/ or http://localhost/grouper if you
 don't want to deal with browser exceptions
 
-11. login with the admin credentials you entered into the webform
-	  * The `etc:pspng:provision_to` attribute values configured in the loader are: `psp_groupOfNames`, `pspng_entitlements`, `pspng_membership`
-	  * `ldapsearch -x -h localhost -b ou=People,dc=myschool,dc=edu '(uid=*)'`
-	  * `ldapsearch -x -h localhost -b ou=Groups,dc=myschool,dc=edu '(cn=*groupname*)'`
+11. login to the Grouper User Interface
+	  * https://localhost/grouper/ or the equivalent URL for your docker host.  Use the admin credentials you entered into the webform (password or Shibboleth)
+	  * The Grouper Loader `etc:pspng:provision_to` attribute values configured in the Reference Implementation are: `psp_groupOfNames`, `pspng_entitlements`, `pspng_membership`
+	  * You can view the changes Grouper provisions to the provided OpenLDAP via the following commands.  Replease `localhost` below if running on a server.
+	    * `ldapsearch -x -h localhost -b ou=People,dc=myschool,dc=edu '(uid=*)'`
+	    * `ldapsearch -x -h localhost -b ou=Groups,dc=myschool,dc=edu '(cn=*groupname*)'`
 
 12. When done
 	  * `./shutdown.sh` or `docker stack rm grouperRI`
