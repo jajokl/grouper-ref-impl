@@ -1,7 +1,7 @@
 ### Introduction
 
 This [Grouper](https://www.internet2.edu/grouper/) InCommon Trusted Access
-Platform (TAP) Reference Implementation implements the use case of running
+Platform Reference Implementation implements the use case of running
 Grouper to manage a LDAP directory leveraging an existing campus LDAP
 directory or Active Directory as the source of campus People (Subjects).  The
 provided LDAP directory is initially empty and is automatically populated with
@@ -33,9 +33,9 @@ itself.
 	  * `docker swarm init | tee swarm_init.txt`
 	  * `chmod 400 swarm_init.txt`
 
-	  You don't need multiple nodes in the swarm.  In fact, the scripting assumes that you do not have multiple swarm nodes (no registry is provided). The reference implementation relies on Docker Secrets and needs a swarm environment.
+	  You don't need multiple nodes in the swarm.  In fact, the scripting assumes that you do not have multiple swarm nodes (no registry is provided). The reference implementation relies on Docker Secrets and operates on a single-node swarm environment.
 
-2. If you are using the tarball distribution, extract it into an empty directory and then cd into grouper.  We call this directory _HOME_.
+2. If you are using the tarball distribution, extract it into an empty directory and then `cd into grouper`.  We call this directory _HOME_.
 If you are reading this on your machine, you already have a distribution in place.
 To instead obtain a copy from github, `git clone https://github.com/jajokl/grouper-ref-impl` and `cd into grouper-ref-impl`.  This will
 now be the _HOME_ directory.
@@ -51,11 +51,10 @@ now be the _HOME_ directory.
 
 4. `cd HOME`
 5. Optional: `cd campus_data`.
-If you enabled Shibboleth-based Grouper authentication in the web configuration tool, you __must__ copy the needed certificates and keys
- into this directory.  The needed files are: `cachain.pem`, `server_ssl.crt`, `server_ssl.key`, `shib_sp-cert.pem`, and `shib_sp-key.pem`.
- You __may__ also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
-It is sometumes helpful to bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before doing the above steps.
-_Optionally_, you can replace the InCommon `school_logo.png` and `favicon.ico` files with appropriate campus images.
+	  * If you enabled Shibboleth-based Grouper authentication in the web configuration tool, you __must__ copy the needed certificates and keys  into this directory.  The needed files are: `cachain.pem`, `server_ssl.crt`, `server_ssl.key`, `shib_sp-cert.pem`, and `shib_sp-key.pem`.
+	  * You __may__ also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
+	  * It is sometimes helpful to bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before doing the above steps.
+	  * _Optionally_, you can replace the InCommon `school_logo.png` and `favicon.ico` files with appropriate campus images.
 6. `./setup_grouper.sh`
 7. `./build.sh`
 8. `./startup.sh`
