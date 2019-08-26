@@ -1,7 +1,7 @@
 ### Introduction
 
 This [Grouper](https://www.internet2.edu/grouper/) InCommon Trusted Access
-Platform (TAP) Reference Implementation implements the use case of running
+Platform (TAP) Reference Implementation automates the use case of running
 Grouper to manage a LDAP directory leveraging an existing campus LDAP
 directory or Active Directory as the source of campus People (Subjects).  The
 provided LDAP directory is initially empty and is automatically populated with
@@ -54,7 +54,7 @@ itself.
 	  * `cd campus_data`
 	  * If you enabled Shibboleth-based Grouper authentication in the web configuration tool, you __must__ copy the needed certificates and keys  into this directory.  The needed files are: `cachain.pem`, `server_ssl.crt`, `server_ssl.key`, `shib_sp-cert.pem`, and `shib_sp-key.pem`.
 	  * You __may__ also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
-	  * It is sometimes helpful to bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before doing the above steps.
+	  * Some find it helpful to first bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before completing these steps.
 	  * _Optionally_, you can replace the InCommon `school_logo.png` and `favicon.ico` files with appropriate campus images.
 
 2. Generate the needed containers and start the application
@@ -65,16 +65,15 @@ itself.
 
 2. Wait a couple/few minutes
 
-The startup process takes approximately a minute on a fast laptop with flash
-  storage.  You can watch the grouper_ui container logs to see when Grouper is
-  ready for use.  This container does the database preparation/check work on
-  startup and other services wait for the UI to be on-line before starting.
+   The startup process takes approximately a minute on a fast laptop with flash
+   storage.  Startup will take significantly longer when run on a machine with spinning storage media.  You can watch the grouper_ui container logs to see when Grouper is
+   ready for use.  This container does the database preparation/check work on
+   startup and other services wait for the UI to be on-line before starting.
 
-2. browse to: https://localhost/grouper/ or http://localhost/grouper if you don't want to deal with browser exceptions
-
-2. login to the Grouper User Interface
-	  * https://localhost/grouper/ or the equivalent URL for your docker host.  Use the admin credentials you entered into the webform (password or Shibboleth)
-	  * The Grouper Loader `etc:pspng:provision_to` attribute values configured in the Reference Implementation are: `psp_groupOfNames`, `pspng_entitlements`, `pspng_membership`
+2. Login to the Grouper User Interface
+	  * https://localhost/grouper/, http://localhost/grouper, or the equivalent URL for your docker host.  Use the admin credentials you entered into the webform (password or Shibboleth)
+	  * If unsure of what to do next, see: https://spaces.at.internet2.edu/display/Grouper/Grouper+new+UI
+	  * The Grouper Loader `etc:pspng:provision_to` attribute values configured in the Reference Implementation are: `psp_groupOfNames`, `pspng_entitlements`, `pspng_membership`.  See the Grouper Loader documentation for more information: https://spaces.at.internet2.edu/display/Grouper/Grouper+Provisioning:+PSPNG
 	  * You can view the changes Grouper provisions to the provided OpenLDAP via the following commands.  Replease `localhost` below if running on a server.
 	    * `ldapsearch -x -h localhost -b ou=People,dc=myschool,dc=edu '(uid=*)'`
 	    * `ldapsearch -x -h localhost -b ou=Groups,dc=myschool,dc=edu '(cn=*groupname*)'`
