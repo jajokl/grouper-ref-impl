@@ -74,7 +74,7 @@ itself.
 	  * https://localhost/grouper/, http://localhost/grouper, or the equivalent URL for your docker host.  Use the admin credentials you entered into the webform (password or Shibboleth)
 	  * If unsure of what to do next, see: https://spaces.at.internet2.edu/display/Grouper/Grouper+new+UI
 	  * The Grouper Loader `etc:pspng:provision_to` attribute values configured in the Reference Implementation are: `psp_groupOfNames`, `pspng_entitlements`, `pspng_membership`.  See the Grouper Loader documentation for more information: https://spaces.at.internet2.edu/display/Grouper/Grouper+Provisioning:+PSPNG
-	  * You can view the changes Grouper provisions to the provided OpenLDAP via the following commands.  Replease `localhost` below if running on a server.
+	  * You can view the changes Grouper provisions to the provided OpenLDAP via the following commands.  Replace `localhost` below if running on a server.
 	    * `ldapsearch -x -h localhost -b ou=People,dc=myschool,dc=edu '(uid=*)'`
 	    * `ldapsearch -x -h localhost -b ou=Groups,dc=myschool,dc=edu '(cn=*groupname*)'`
 
