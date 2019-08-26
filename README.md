@@ -1,7 +1,7 @@
 ### Introduction
 
 This [Grouper](https://www.internet2.edu/grouper/) InCommon Trusted Access
-Platform Reference Implementation implements the use case of running
+Platform (TAP) Reference Implementation implements the use case of running
 Grouper to manage a LDAP directory leveraging an existing campus LDAP
 directory or Active Directory as the source of campus People (Subjects).  The
 provided LDAP directory is initially empty and is automatically populated with
@@ -14,7 +14,7 @@ Implementation can be installed on your laptop, configuring Grouper to use
 simple password-based authentication, or run on a server fully integrated into
 your campus Shibboleth environment.
 
-The Reference Implementation operates in a Docker Swarm environment and
+This Reference Implementation (RI) operates in a Docker Swarm environment and
 provides containers for OpenLDAP, a MARIADB database for Grouper, and
 individual containers for several Grouper roles (UI, loader, web services,
 etc.).  The Reference Implementation supports authentication to the Grouper UI
@@ -22,9 +22,9 @@ both using simple passwords (ideal for testing on your laptop) and via a
 Shibboleth SP (perfect for use by multiple people on a server).  The build's
 scripting is designed to work on Linux and MacOS.
 
-This reference is not meant to be deployed into production.  In particular, a
+This implementation is not meant to be deployed directly into production.  In particular, a
 real database with backups and all of the normal infrastructure is needed.
-This implementation is useful as a working template for designing your
+This code is useful as a working template for designing your
 production implementation as well as early learning and working with Grouper
 itself.
 
@@ -35,49 +35,54 @@ itself.
 
 	  You don't need multiple nodes in the swarm.  In fact, the scripting assumes that you do not have multiple swarm nodes (no registry is provided). The reference implementation relies on Docker Secrets and operates on a single-node swarm environment.
 
-2. If you are using the tarball distribution, extract it into an empty directory and then `cd into grouper`.  We call this directory _HOME_.
-If you are reading this on your machine, you already have a distribution in place.
-To instead obtain a copy from github, `git clone https://github.com/jajokl/grouper-ref-impl` and `cd into grouper-ref-impl`.  This will
-now be the _HOME_ directory.
+2. Initial Code Acquisition
+	  * If you are using the tarball distribution, extract it into an empty directory and then `cd into grouper`.  We call this directory _HOME_.  If you are reading this text on your machine, you already have a distribution in place.
+	  * To instead obtain a copy from github, `git clone https://github.com/jajokl/grouper-ref-impl` and `cd into grouper-ref-impl`.  This will now be the _HOME_ directory.
 
-3. `cd grouper_cfg`
-	  * `./build.sh`
-	  * `./start-cfg.sh`
-	  * browse to: http://localhost/ (or the URL of your docker host) and fill in the web form
-        * Select local password authentication or Shibboleth depending on your needs. 
-	    * Press the Submit button and download the file (grouper_config.dat)
-	    * Place this config file into HOME
-	  * `./stop-cfg`
+2. Build and run the web-based grouper RI configuration utility
+	  * `cd grouper_cfg`
+	    * `./build.sh`
+	    * `./start-cfg.sh`
+	    * browse to: http://localhost/ (or the URL of your docker host) and fill in the web form
+          * Select local password authentication or Shibboleth depending on your needs. 
+	      * Press the Submit button and download the file `grouper_config.dat`
+	      * Place this downloaded config file into HOME
+	    * `./stop-cfg`
+        * `cd HOME`
 
-4. `cd HOME`
-5. Optional: `cd campus_data`.
+2. Add campus-specific files - this step is *optional* if you selected password-based authentication
+	  * `cd campus_data`
 	  * If you enabled Shibboleth-based Grouper authentication in the web configuration tool, you __must__ copy the needed certificates and keys  into this directory.  The needed files are: `cachain.pem`, `server_ssl.crt`, `server_ssl.key`, `shib_sp-cert.pem`, and `shib_sp-key.pem`.
 	  * You __may__ also add your IdP metadata to `HOME/campus_metadata` using the filename `idp-metadata.xml` instead of having the setup scripts download the metadata for you via the webform URL.
 	  * It is sometimes helpful to bring a simple Apache-based Shibboleth SP on-line, configure it with the appropriate metadata, and test before doing the above steps.
 	  * _Optionally_, you can replace the InCommon `school_logo.png` and `favicon.ico` files with appropriate campus images.
-6. `./setup_grouper.sh`
-7. `./build.sh`
-8. `./startup.sh`
-9. Wait a couple/few minutes.
+
+2. Generate the needed containers and start the application
+	  * `cd HOME`
+	  * `./setup_grouper.sh`
+	  * `./build.sh`
+	  * `./startup.sh`
+
+2. Wait a couple/few minutes
+
 The startup process takes approximately a minute on a fast laptop with flash
   storage.  You can watch the grouper_ui container logs to see when Grouper is
   ready for use.  This container does the database preparation/check work on
   startup and other services wait for the UI to be on-line before starting.
 
-10. browse to: https://localhost/grouper/ or http://localhost/grouper if you
-don't want to deal with browser exceptions
+2. browse to: https://localhost/grouper/ or http://localhost/grouper if you don't want to deal with browser exceptions
 
-11. login to the Grouper User Interface
+2. login to the Grouper User Interface
 	  * https://localhost/grouper/ or the equivalent URL for your docker host.  Use the admin credentials you entered into the webform (password or Shibboleth)
 	  * The Grouper Loader `etc:pspng:provision_to` attribute values configured in the Reference Implementation are: `psp_groupOfNames`, `pspng_entitlements`, `pspng_membership`
 	  * You can view the changes Grouper provisions to the provided OpenLDAP via the following commands.  Replease `localhost` below if running on a server.
 	    * `ldapsearch -x -h localhost -b ou=People,dc=myschool,dc=edu '(uid=*)'`
 	    * `ldapsearch -x -h localhost -b ou=Groups,dc=myschool,dc=edu '(cn=*groupname*)'`
 
-12. When done
+2. When done
 	  * `./shutdown.sh` or `docker stack rm grouperRI`
 
-13. Restarting the Reference Implementation
+2. Restarting the Reference Implementation
 	  * To restart the service where you left off (i.e., retaining your grouper and ldap databases), just run `./startup.sh`
 	  * In order to obtain a new clean database for testing, wait for two or three minutes after
 	step 12, then run `docker volume prune` (follow with a `docker volume ls` to make
@@ -85,14 +90,15 @@ don't want to deal with browser exceptions
     `grouperRI_grouper_ldap_etc`, and `grouperRI_grouper_mysql` instead.
 	`docker volume prune` will **delete all docker volumes on your machine**.
 
-14. Clean Restart
+2. Clean Restart
+
 You should not need a clean restart, but if
-you are running into weird issues after multiple attempts to use the reference
-implementation, it may be time to clean up all of the docker components and start
-fresh.  The instructions below will remove most docker application components on
-your machine.  If you are running other docker services on the machine, you
-will **NOT** want to follow these instructions directly and will want to make sure
-that you preserve what is needed on your machine.
+ you are running into weird issues after multiple attempts to use the reference
+ implementation, it may be time to clean up all of the docker components and start
+ fresh.  The instructions below will remove most docker application components on
+ your machine.  If you are running other docker services on the machine, **you
+ will NOT** want to follow these instructions directly and will want to make sure
+ that you preserve what is needed on your machine.
 	  * `docker stack rm grouperRI; sleep 120`
 	  * `docker rm $(docker ps -a)` # just in case something hasn't completed
 	  * `docker ps -a` # if you see anything, repeat the step above
@@ -100,10 +106,12 @@ that you preserve what is needed on your machine.
 	  * `docker rmi $(docker image ls -aq)`
 
 
-### Known Issues and Discussion
-1. Cleanup work remains for some of the configuration files.
+### Troubleshooting, Known Issues and Discussion
+1. If you are unable to access the Grouper UI via your web browser, make sure that you ran `./stop-cfg.sh` to stop the web configuration container.
+2. Cleanup work remains for some of the configuration files.
 2. The configuration web container should be modified so that it can also assist with Shibboleth debugging of the server version of the reference implementation.
-3. The provided `docker-compose.yml` file mounts secrets on invocation from the secret's tree.  A production Swarm-based Grouper 
+2. The provided `docker-compose.yml` file mounts secrets on invocation from the secret's tree.  A production Swarm-based Grouper 
 	environment will most likely create the secrets via a separate, more protected, process.  The needed secret statements are commented out in the provided `docker-compose.yml` file.
-4. View of Web Configuration Page of Step 3
+2. View of Web Configuration Page of Step 3
+
 ![view of webconfig page](webcfg.png)
