@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta charset="utf8">
+  <title>ITAP Grouper Reference Implementation Configuration</title>
+  <link rel="stylesheet" media="screen" type="text/css" href="/configGrouper.css" />
+
+<style>
+  button {
+    /* background-color: #4CAF50; Green */
+    background-color: #827976; /* Grey */
+    border: none;
+    color: white;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #4CAF50; /* Green */
+  }
+  div {
+    border-width: thin;
+    border-style: solid;
+  }
+</style>
+
+</head>
+<body>
+
+
+
+<h2>
+<img img src="/school_logo.png" align="middle">
+&nbsp; &nbsp; &nbsp; &nbsp; ITAP Grouper Reference Implementation Initial Configuration
+</h2>
+
+<br clear="all"/>
+
+<p>
+
+Complete the webform below and press the Generate button to create the initial
+configuration file needed by the Grouper Reference Implementation.  On
+submission, the webform will download a file named
+<code>grouper_config.dat</code> to your workstation.  Place this file into the
+base source directory of the reference implementation before running the
+configure script.  The downloaded file is a simple shell script of variable
+definitions that will be sourced by the reference implementation tooling to
+preconfigure Grouper.
+
+</p>
+
+<p style="font-weight:bold;">
+Remember to protect the downloaded file if needed, it contains whatever passwords you enter below in unencrypted clear text form.
+</p>
+
+
+<p>
+Error checking is very limited, please <b>ensure that every appropriate field
+in the webform contains data</b> before submitting.  You may only leave the following fields, if appropriate, blank: 
+<code>GROUPER_LDAP_SUBJECT_SOURCE_PRINCIPAL</code> &nbsp; &nbsp;
+<code>GROUPER_LDAP_SUBJECT_SOURCE_PASSWORD</code> &nbsp; &nbsp;
+<code>SHIBBOLETH_IDP_METADATA_URL</code> &nbsp; &nbsp;
+<code>SHIBBOLETH_IDP_ENTITY_ID</code> &nbsp; &nbsp;
+<code>SHIBBOLETH_SP_ENTITY_ID</code>
+</p>
+
+<p>
+The names of the shell script variables are shown below since it's often
+easier to edit the file to make changes than to come back to this web site.
+</p>
+
+<p>
+<!-- <form action="/cgi-bin/printenv" method="post"> -->
+<form action="/cgi-bin/configGrouper.py" method="post">
+
+<div id="main_config" style="background-color:palegoldenrod">
+<h3>Base Configuration</h3>
+<ol>
+<li>
+<label for="GROUPER_INSTITUTION_NAME">GROUPER_INSTITUTION_NAME</label> 
+<input type="text" id="GROUPER_INSTITUTION_NAME" name="GROUPER_INSTITUTION_NAME" size="32" placeholder="Enter name of your organization" value=""></input>
+<br>
+This value is used for user interface branding.  Enter the name of your
+institution, e.g., &quot;University of X&quot;.  Additional visual branding is possible by
+replacing the InCommon logo with your school logo via updating the appropriate
+file in the <code>campus_files</code> directory.
+</li> 
+<br/>
+
+<li>
+<label for="ITAP_GROUPER_VERSION">ITAP_GROUPER_VERSION</label> 
+<input type="text" id="ITAP_GROUPER_VERSION" name="ITAP_GROUPER_VERSION" size="32" placeholder="2.4.0-a29-u14-w3-p2-20190217" value="2.4.0-a29-u14-w3-p2-20190217"></input>
+<br>
+This is the ITAP production container version.  Please do not change this value unless you have reviewed the updates and are sure of compatibility.
+</li>
+</ol>
+</div>
+
+<div id="ldap_config" style="background-color:palegoldenrod">
+<h3>LDAP Configuration</h3>
+
+This LDAP configuration is for the instance of OpenLDAP provided by this Grouper Reference Implementation.  Grouper is configured to provision users and groups to this server.
+
+<ol>
+<li>
+<label for="LDAP_DB_PASSWORD">LDAP_DB_PASSWORD</label> 
+<input type="text" id="LDAP_DB_PASSWORD" name="LDAP_DB_PASSWORD" size="32" value="The1Root2Db3Password"></input>
+<br/>
+The root password for the OpenLDAP database provided by the reference
+implementation.  This LDAP is provisioned by Grouper and is not your
+subject/person source.
+</li>
+<br/>
+
+<li>
+<label for="LDAP_DM_PASSWORD">LDAP_DM_PASSWORD</label> 
+<input type="text" id="LDAP_DM_PASSWORD" name="LDAP_DM_PASSWORD" size="32" value="The1Directory2Manager3Password"></input>
+<br/>
+The Directory Manager password for the OpenLDAP database provided by the
+reference implementation.  This LDAP is provisioned by Grouper and is not your
+subject/person source.  This password is the one generally used to make
+changes to data stored in the directory.
+</li>
+<br/>
+
+<li>
+<label for="LDAP_SH_PASSWORD">LDAP_SH_PASSWORD</label> 
+<input type="text" id="LDAP_SH_PASSWORD" name="LDAP_SH_PASSWORD" size="32" value="The1Shibboleth2User3Password"></input>
+<br/>
+This user <i>Shibboleth</i> password for the OpenLDAP database provided by the
+reference implementation.  This password is not used in all environments and
+may be set to something arbitrarily complex.
+</li>
+<br/>
+
+<li>
+<label for="LDAP_OT_PASSWORD">LDAP_OT_PASSWORD</label> 
+<input type="text" id="LDAP_OT_PASSWORD" name="LDAP_OT_PASSWORD" size="50" value="A1long3Password5For7The7Other9Identities"></input>
+<br/>
+This user password for the OpenLDAP database test data provided by the
+reference implementation.  This password is not used in all environments and
+may be set to something arbitrarily complex.
+</li>
+<br/>
+
+<li>
+<label for="LDAP_BASE_DOMAIN">LDAP_BASE_DOMAIN</label> 
+<input type="text" id="LDAP_BASE_DOMAIN" name="LDAP_BASE_DOMAIN" size="40" placeholder="dc=myschool,dc=edu" value=""></input>
+<br/>
+Enter the Domain Component style name for your institution.  This will be used to provision into the OpenLDAP instance provided by the reference implementation.
+</li>
+<br/>
+
+<li>
+<label for="LDAP_ADD_DEMOUSERS">LDAP_ADD_DEMOUSERS</label> 
+<input type="text" id="LDAP_ADD_DEMOUSERS" name="LDAP_ADD_DEMOUSERS" placeholder="No" value="Yes"></input>
+<br>
+Enter "Yes" or "No" on if the OpenLDAP directory provided by the reference
+implementation should be pre-populated with some demo users.  This feature is
+generally not needed for grouper testing.
+</li>
+<br/>
+
+<li>
+<label for="LDAP_DCDOMAIN">LDAP_DCDOMAIN</label> 
+<input type="text" id="LDAP_DCDOMAIN" name="LDAP_DCDOMAIN" placeholder="dc=myschool,dc=edu" size="40" value=""></input>
+<br/>
+Enter the Domain Component style name for your institution.  This value will
+be used inside Grouper configuration files and is typically set to the same
+value as above.
+</li>
+</ol>
+</div>
+
+<div id="databae_configuration" style="background-color:palegoldenrod">
+<h3>MARIA Database Configuration</h3>
+The Reference Implementation provides a MARIADB instance for use by Grouper.  The only configuration needed is to set the database root and grouper user passwords.
+<ol>
+<li>
+<label for="DB_USER_ROOT_PWD">DB_USER_ROOT_PWD</label> 
+<input type="text" id="DB_USER_ROOT_PWD" name="DB_USER_ROOT_PWD" size="32" placeholder="ChangeThisMysqlPassword" value="ChangeThisMysqlPassword"></input>
+<br>
+The reference implementation includes a MARIA database server to support
+Grouper.  This setting controls the MARIA database's root password and should
+be set to some obscure value.
+</li>
+<br/>
+
+<li>
+<label for="DB_USER_GROUPER_PASSWORD">DB_USER_GROUPER_PASSWORD</label> 
+<input type="text" id="DB_USER_GROUPER_PASSWORD" name="DB_USER_GROUPER_PASSWORD" size="32" placeholder="ChangeThisMysqlPasswordToo" value="ChangeThisMysqlPasswordToo"></input>
+<br/>
+The MARIA database password for the Grouper user.  This password should be set to some obscure value.
+</li>
+</ol>
+</div>
+
+<div id="grouper_general_configuration" style="background-color:palegoldenrod">
+<h3>Grouper General Configuration</h3>
+
+Grouper needs a source of Subjects (i.e., People) to function.  Instead of
+providing a bundle of source of test data, the Reference Implementation is
+designed for campus Subject source integration.  If your campus has a public
+white pages LDAP server, use that server since authentication is typically not
+required and they are designed for performance.  If your campus doesn't
+operate a public LDAP server, follow the instructions in the fields below to
+integrate with a Microsoft Active Directory.
+
+<ol>
+<li>
+<label for="GROUPER_LDAP_SUBJECT_SOURCE">GROUPER_LDAP_SUBJECT_SOURCE</label> 
+<input type="text" id="GROUPER_LDAP_SUBJECT_SOURCE" name="GROUPER_LDAP_SUBJECT_SOURCE" size="40" placeholder="ldap://ldap.myschool.edu:389" value=""></input>
+<br/>
+This is the URL of your campus LDAP subject/person source.  A campus public LDAP server is
+likely to have a value like <i>ldap://ldap.myschool.edu:389</i> whereas the
+campus active directory is more likely to have a URL like <i>ldaps://domain.myschool.edu:636</i>.
+</li>
+<br/>
+
+<li>
+<label for="GROUPER_LDAP_SUBJECT_SOURCE_BASE">GROUPER_LDAP_SUBJECT_SOURCE_BASE</label>
+<input type="text" id="GROUPER_LDAP_SUBJECT_SOURCE_BASE" name="GROUPER_LDAP_SUBJECT_SOURCE_BASE" size="45" placeholder="ou=People,dc=myschool,dc=edu" value=""></input>
+<br/>
+The person search base for your campus LDAP subject source.  A campus public
+LDAP server is likely to have a value like <i>ou=People,dc=myschool,dc=edu</i>
+while an active directory would more likely have a value similar to <i>cn=Users,dc=domain,dc=myschool,dc=edu</i>.
+</li>
+<br/>
+
+<li>
+<label for="GROUPER_LDAP_SUBJECT_SOURCE_PRINCIPAL">GROUPER_LDAP_SUBJECT_SOURCE_PRINCIPAL</label> 
+<input type="text" id="GROUPER_LDAP_SUBJECT_SOURCE_PRINCIPAL" name="GROUPER_LDAP_SUBJECT_SOURCE_PRINCIPAL" size="50" placeholder="" value=""></input>
+<br/>
+If your LDAP subject source requires authentication, enter the bind DN name
+here.  For active directory, this will look something like
+<i>cn=userID,cn=Users,dc=domain,dc=school,dc=edu</i>.  Leave this field empty if your LDAP does not require authentication.
+</li>
+<br/>
+
+<li>
+<label for="GROUPER_LDAP_SUBJECT_SOURCE_PASSWORD">GROUPER_LDAP_SUBJECT_SOURCE_PASSWORD</label> 
+<input type="text" id="GROUPER_LDAP_SUBJECT_SOURCE_PASSWORD" name="GROUPER_LDAP_SUBJECT_SOURCE_PASSWORD" size="20" placeholder="" value=""></input>
+<br/>
+If your LDAP subject source requires authentication, enter the bind password
+here.  Leave this field empty if your LDAP does not require authentication.
+</li>
+<br/>
+
+
+<li>
+<label for="GROUPER_LDAP_SUBJECT_SOURCE_ATTRIBUTE">GROUPER_LDAP_SUBJECT_SOURCE_ATTRIBUTE</label> 
+<input type="text" id="GROUPER_LDAP_SUBJECT_SOURCE_ATTRIBUTE" name="GROUPER_LDAP_SUBJECT_SOURCE_ATTRIBUTE" size="8" placeholder="uid" value="uid"></input>
+<br/>
+The unique subject identifier attribute.  A campus public LDAP directory is
+likely to use <i>uid</i> whereas active directory is most likely configured to
+use <i>cn</i>.
+</li>
+<br/>
+
+<li>
+<label for="USER_EPPN_DOMAIN">USER_EPPN_DOMAIN</label> 
+<input type="text" id="USER_EPPN_DOMAIN" name="USER_EPPN_DOMAIN" size="32" placeholder="myschool.edu" value=""></input>
+<br/>
+Used to tune portions of the grouper configuration.  Examine the scripting for additional details.
+</li>
+<br/>
+
+
+<li>
+<label for="SCHOOL_BASE_DOMAIN">SCHOOL_BASE_DOMAIN</label> 
+<input type="text" id="SCHOOL_BASE_DOMAIN" name="SCHOOL_BASE_DOMAIN" size="32" placeholder="myschool.edu" value=""></input>
+<br/>
+Used to tune portions of the grouper configuration.  Examine the scripting for additional details.
+</li>
+<br/>
+
+</ol>
+
+</div>
+
+
+<div id="grouper_ui_configuration" style="background-color:palegoldenrod">
+<h3>Grouper UI Configuration</h3>
+<ol>
+<li>
+<label for="GROUPER_UI_HOST_FQDN">GROUPER_UI_HOST_FQDN</label> 
+<input type="text" id="GROUPER_UI_HOST_FQDN" name="GROUPER_UI_HOST_FQDN" size="32" placeholder="grouper.iamtest.myschool.edu" value="localhost"></input>
+<br/>
+The fully qualified domain name for the server running the Grouper reference implementation.  Use <i>localhost</i> if testing on your laptop or the real
+host domain name if using a server.
+</li>
+<br/>
+
+<li>
+<label for="GROUPER_ADMIN_USER">GROUPER_ADMIN_USER</label> 
+<input type="text" id="GROUPER_ADMIN_USER" name="GROUPER_ADMIN_USER" size="24" placeholder="user@myschool.edu" value=""></input>
+<br/>
+The login id (eppn) of the initial grouper administrative user.
+</li>
+<br/>
+
+<li>
+<label for="GROUPER_AUTHENTICATION_MODE">GROUPER_AUTHENTICATION_MODE</label>
+<br/>
+&nbsp; &nbsp;
+<input type="radio" id="GROUPER_AUTHENTICATION_MODE" name="GROUPER_AUTHENTICATION_MODE" value="PASSWORD" checked>Password
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+<input type="radio" id="GROUPER_AUTHENTICATION_MODE" name="GROUPER_AUTHENTICATION_MODE" value="SHIBBOLETH">Shibboleth
+<br/>
+Select Shibboleth authentication if you are working on a server, already have
+your certificates, and have the server listed your local metadata.  Otherwise,
+use password-based authentication.
+
+</li>
+<br/>
+
+<li>
+<label for="GROUPER_ADMIN_LOCAL_PASSWORD">GROUPER_ADMIN_LOCAL_PASSWORD</label>
+<input type="text" id="GROUPER_ADMIN_LOCAL_PASSWORD" name="GROUPER_ADMIN_LOCAL_PASSWORD" size="24" placeholder="2.71828" value="2.71828"></input>
+<br/>
+This password is used to authenticate the Grouper administrative user when
+running using local authentication mode (e.g., laptop testing as opposed to Shibboleth).  Server-based
+operation of the reference implementation relies on the campus IdP
+for authentication.
+</li>
+<br/>
+
+
+
+<li>
+<label for="SHIBBOLETH_IDP_METADATA_URL">SHIBBOLETH_IDP_METADATA_URL</label> 
+<input type="text" id="SHIBBOLETH_IDP_METADATA_URL" name="SHIBBOLETH_IDP_METADATA_URL" size="40" placeholder="https://shibidp.its.virginia.edu/idp/shibboleth/uva-idp-metadata.xml" value=""></input>
+<!-- replace with InCommon IdP only bundle -->
+<br/>
+If you selected Shibboleth-based authentication, enter a URL for downloading a metadata file that includes your IdP.  Otherwise leave blank.
+</li>
+<br/>
+
+<li>
+<label for="SHIBBOLETH_IDP_ENTITY_ID">SHIBBOLETH_IDP_ENTITY_ID</label> 
+<input type="text" id="SHIBBOLETH_IDP_ENTITY_ID" name="SHIBBOLETH_IDP_ENTITY_ID" size="40" placeholder="urn:mace:incommon:virginia.edu" value=""></input>
+<br/>
+If you selected Shibboleth-based authentication, enter the entity-id for your IdP.
+</li>
+<br/>
+
+<li>
+<label for="SHIBBOLETH_SP_ENTITY_ID">SHIBBOLETH_SP_ENTITY_ID</label> 
+<input type="text" id="SHIBBOLETH_SP_ENTITY_ID" name="SHIBBOLETH_DP_ENTITY_ID" size="40" placeholder="https://mytestbox.school.edu/shibboleth" value=""></input>
+<br/>
+If you selected Shibboleth-based authentication, enter the entity-id for the SP - this will typically be https://your-box-fqdn/shibboleth
+</li>
+<br/>
+</ol>
+</div>
+
+<input type="hidden" id="LDAP_SWARM_MODE" name="LDAP_SWARM_MODE" value="Yes"></input>
+<input type="hidden" id="LDAP_SWARM_MODE_SECRETDIR" name="LDAP_SWARM_MODE_SECRETDIR" value="../secrets/openldap"></input>
+<input type="hidden" id="LDAP_CONFIGURE_NOPROMPT" name="LDAP_CONFIGURE_NOPROMPT" value="Yes"></input>
+
+<center><button class="button" id="sub-button" type="submit">Generate the Configuration File</button></center>
+
+</form>
+
+</body>
+</html>
