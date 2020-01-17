@@ -111,6 +111,6 @@ You should not need a clean restart, but if
 2. The configuration web container should be modified so that it can also assist with Shibboleth debugging of the server version of the reference implementation.
 2. The provided `docker-compose.yml` file mounts secrets on invocation from the secret's tree.  A production Swarm-based Grouper 
 	environment will most likely create the secrets via a separate, more protected, process.  The needed secret statements are commented out in the provided `docker-compose.yml` file.
-2. A partial view of Web Configuration Page of Step 3 is below.  [A complete example:](./Grouper-RI-example.html)
+2. A partial view of Web Configuration Page of Step 3 is below.  Click here for [a complete example](./Grouper-RI-example.html) of the config web form.
 
 ![view of webconfig page](webcfg.png)
